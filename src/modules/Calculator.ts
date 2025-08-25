@@ -7,7 +7,7 @@ interface button {
 interface history {
   operation: Function;
   leftNum: number;
-  rightNum: number;
+  rightNum: number;;;;;;
 }
 
 
