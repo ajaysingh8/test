@@ -11,6 +11,7 @@ interface history {
 }
 
 
+
 // Math operations
 const add: Function = (a: number, b: number): number => a + b;
 const subtract: Function = (a: number, b: number): number => a - b;
