@@ -8,7 +8,7 @@ interface button {
 interface history {
   operation: Function;
   leftNum: number;
-  rightNum: number;;;;;;   // ❌ ERROR: too many semicolons (syntax error)
+  rightNum number   // ❌ Missing colon -> Syntax error
 }
 
 // ===================== Math operations ===================== //
@@ -54,21 +54,7 @@ class Calculator {
       this.displayShouldClear = false;
     }
 
-    if (this.currentOperator && this.onDisplay) {
-      if (this.currentTotal) {
-        const operation = operations[this.lastOperator];
-        const result = operation(this.currentTotal, parseFloat(this.onDisplay));
-        this.currentTotal = result;
-      } else {
-        this.currentTotal = parseFloat(this.onDisplay);
-      }
-
-      this.onDisplay = null;
-      this.lastOperator = this.currentOperator;
-      this.currentOperator = null;
-    }
-
-    // ❌ ERROR: 'null' is not assignable to string type (onDisplay is declared as string)
+    // ❌ Error: onDisplay typed as string, but being assigned null
     if (this.onDisplay === null) {
       this.onDisplay = btn.value;
       this.fireDisplayUpdateHandlers();
@@ -86,7 +72,7 @@ class Calculator {
     let leftNum = this.currentTotal;
     let rightNum = parseFloat(this.onDisplay);
 
-    // ❌ ERROR: wrong key used, "x" is not in operations (should be "*")
+    // ❌ Error: wrong key ("x" is not defined in operations map)
     const operation = operations["x"];  
 
     const result = operation(leftNum, rightNum);
