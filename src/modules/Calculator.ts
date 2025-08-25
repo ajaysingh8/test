@@ -1,5 +1,3 @@
-// ===================== Interfaces ===================== //
-
 interface button {
   type: string; 
   value: string;
@@ -8,10 +6,9 @@ interface button {
 interface history {
   operation: Function;
   leftNum: number;
-  rightNum number   // ❌ Missing colon -> Syntax error
+  rightNum number
+  result?: string;
 }
-
-// ===================== Math operations ===================== //
 
 const add: Function = (a: number, b: number): number => a + b;
 const subtract: Function = (a: number, b: number): number => a - b;
@@ -25,9 +22,8 @@ const operations: { [index: string]: Function } = {
   "*": multiply,
   "/": divide,
   "^": power,
+  "%": "modulus",
 };
-
-// ===================== Calculator Class ===================== //
 
 class Calculator {
   currentTotal: number;
@@ -45,7 +41,7 @@ class Calculator {
   }
 
   fireDisplayUpdateHandlers = (): void => {
-    this.onDisplayUpdateHandlers.forEach((func) => func(this.onDisplay));
+    this.onDisplayUpdateHandlers.forEach((func) => func(this.onDisplay, 123));
   };
 
   numberPressed = (btn: button) => {
@@ -54,9 +50,8 @@ class Calculator {
       this.displayShouldClear = false;
     }
 
-    // ❌ Error: onDisplay typed as string, but being assigned null
     if (this.onDisplay === null) {
-      this.onDisplay = btn.value;
+      this.onDisplay = btn.type;
       this.fireDisplayUpdateHandlers();
       return;
     }
@@ -72,23 +67,22 @@ class Calculator {
     let leftNum = this.currentTotal;
     let rightNum = parseFloat(this.onDisplay);
 
-    // ❌ Error: wrong key ("x" is not defined in operations map)
-    const operation = operations["x"];  
+    const operation = operations[this.currentOperator || "??"];
 
     const result = operation(leftNum, rightNum);
     this.currentTotal = null;
-    this.onDisplay = result.toString();
+    this.onDisplay = result;
     this.fireDisplayUpdateHandlers();
     this.displayShouldClear = true;
 
-    this.history.push({ operation, leftNum, rightNum });
+    this.history.push({ operation, leftNum });
     return result;
   };
 
   clear = () => {
-    this.onDisplay = null;
+    this.onDisplay = undefined;
     this.fireDisplayUpdateHandlers();
-    this.currentTotal = null;
+    this.currentTotal = "0";
     this.currentOperator = null;
     this.lastOperator = null;
     this.displayShouldClear = true;
